@@ -8,7 +8,13 @@ public class GridChangeType : MonoBehaviour
     [SerializeField]
     private Sprite[] sprites;
     public int value;
+    public int[] pos;
     int i = 0;
+    void Start()
+    {
+        string[] test = this.name.Split('/'); pos = new int[2];
+        pos[0] = int.Parse(test[0]); pos[1] = int.Parse(test[1]);
+    }
     void OnMouseDown()
     {
         i++;

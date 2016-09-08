@@ -11,6 +11,9 @@ public class EnemyPathFind : MonoBehaviour {
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
         myPosition = new int[2];
+        target = new int[2];
+        target[0] = 2; target[1] = 2;
+        InvokeRepeating("ds", 1,1);
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -29,32 +32,33 @@ public class EnemyPathFind : MonoBehaviour {
         
         float[] totalDist = new float[8];
 
-        totalDist[0] = gameManager.allGrid[myPosition[0]+1, myPosition[1]].transform.position.x +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].transform.position.y - target[0] - target[1] + 
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value;
-        totalDist[1] = gameManager.allGrid[myPosition[0] - 1, myPosition[1]].transform.position.x +
-            gameManager.allGrid[myPosition[0] - 1, myPosition[1]].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value;
-        totalDist[2] = gameManager.allGrid[myPosition[0], myPosition[1]+1].transform.position.x +
-            gameManager.allGrid[myPosition[0], myPosition[1] + 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value;
-        totalDist[3] = gameManager.allGrid[myPosition[0], myPosition[1]-1].transform.position.x +
-            gameManager.allGrid[myPosition[0], myPosition[1] - 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value;
-        totalDist[4] = gameManager.allGrid[myPosition[0] + 1, myPosition[1] + 1].transform.position.x +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1] + 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value + 4;
-        totalDist[5] = gameManager.allGrid[myPosition[0] - 1, myPosition[1] -1].transform.position.x +
-            gameManager.allGrid[myPosition[0] - 1, myPosition[1] - 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value + 4;
-        totalDist[6] = gameManager.allGrid[myPosition[0]-1, myPosition[1] + 1].transform.position.x +
-            gameManager.allGrid[myPosition[0] - 1, myPosition[1] + 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value + 4;
-        totalDist[7] = gameManager.allGrid[myPosition[0]+1, myPosition[1] - 1].transform.position.x +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1] - 1].transform.position.y - target[0] - target[1] +
-            gameManager.allGrid[myPosition[0] + 1, myPosition[1]].GetComponent<GridChangeType>().value + 4;
+        totalDist[0] = - gameManager.allGrid[myPosition[0] + 1 +1, myPosition[1] +1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
+        totalDist[1] = - gameManager.allGrid[myPosition[0] - 1, myPosition[1]].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
+        totalDist[2] = - gameManager.allGrid[myPosition[0], myPosition[1]+1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
+        totalDist[3] = - gameManager.allGrid[myPosition[0], myPosition[1]-1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] - 1 + 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
+        totalDist[4] = - gameManager.allGrid[myPosition[0] + 1, myPosition[1] + 1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
+        totalDist[5] = - gameManager.allGrid[myPosition[0] - 1, myPosition[1] -1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
+        totalDist[6] = - gameManager.allGrid[myPosition[0]-1, myPosition[1] + 1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
+        totalDist[7] = - gameManager.allGrid[myPosition[0]+1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[0] -
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
+            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
 
         float value = Mathf.Min(totalDist[0], totalDist[1], totalDist[2], totalDist[3], totalDist[4], totalDist[5], totalDist[6], totalDist[7]);
+       
         int myName = -1;
         for(int i = 0; i < totalDist.Length; i++)
         {
@@ -81,12 +85,14 @@ public class EnemyPathFind : MonoBehaviour {
         return this.gameObject;
 
     }
-    void MakeRoute()
+    void ds()
     {
-        while(myPosition[0] != target[0] || myPosition[1] != target[1])
+        print(target[0] + "  " + target[1]);
+        print("proximo move "+ VerifyNext().name);
+        //while(myPosition[0] != target[0] || myPosition[1] != target[1])
         {
-
         }
+
     }
 
 }
