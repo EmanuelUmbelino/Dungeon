@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-    private int lines, columns;
+    public int lines, columns;
     [SerializeField]
     private GameObject Grid;
     public GameObject[,] allGrid;

@@ -5,11 +5,13 @@ public class EnemyPathFind : MonoBehaviour {
 
     private int[] myPosition;
     private GameManager gameManager;
+    private GameObject[,] grid;
     private int[] target;
 
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
+        grid = gameManager.allGrid;
         myPosition = new int[2];
         target = new int[2];
         target[0] = 2; target[1] = 2;
@@ -22,72 +24,72 @@ public class EnemyPathFind : MonoBehaviour {
         {
             this.name = other.name;
             string[] i = this.name.Split('/');
-            myPosition[0] = int.Parse(i[0]);
-            myPosition[1] = int.Parse(i[1]);
+            myPosition[0] = int.Parse(i[0])-1;
+            myPosition[1] = int.Parse(i[1])-1;
         }
+    }
+    private bool ValidCoordinates(int x, int y)
+    {
+        if (x < 0 || y < 0)
+        {
+            return false;
+        }
+        if (x >= PlayerPrefs.GetInt("lines") || y >= PlayerPrefs.GetInt("columns"))
+        {
+            return false;
+        }
+        return true;
     }
     GameObject VerifyNext()
     {
-        int[] distance = new int[2]; distance[0] = target[0] - myPosition[0];distance[1] = target[1] - myPosition[1];
+        /*[-1,1] [0,1] [1,1]
+          [-1,0]       [1,0]
+          [-1,-1][0,-1][1,-1]*/
         
-        float[] totalDist = new float[8];
-
-        totalDist[0] = - gameManager.allGrid[myPosition[0] + 1 +1, myPosition[1] +1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
-        totalDist[1] = - gameManager.allGrid[myPosition[0] - 1, myPosition[1]].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
-        totalDist[2] = - gameManager.allGrid[myPosition[0], myPosition[1]+1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
-        totalDist[3] = - gameManager.allGrid[myPosition[0], myPosition[1]-1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] - 1 + 1, myPosition[1] - 1].GetComponent<GridChangeType>().value;
-        totalDist[4] = - gameManager.allGrid[myPosition[0] + 1, myPosition[1] + 1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
-        totalDist[5] = - gameManager.allGrid[myPosition[0] - 1, myPosition[1] -1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
-        totalDist[6] = - gameManager.allGrid[myPosition[0]-1, myPosition[1] + 1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] - 1 - 1, myPosition[1] + 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
-        totalDist[7] = - gameManager.allGrid[myPosition[0]+1, myPosition[1] - 1].GetComponent<GridChangeType>().pos[0] -
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1 - 1].GetComponent<GridChangeType>().pos[1] + target[0] + target[1] +
-            gameManager.allGrid[myPosition[0] + 1 - 1, myPosition[1] - 1].GetComponent<GridChangeType>().value + 4;
-
-        float value = Mathf.Min(totalDist[0], totalDist[1], totalDist[2], totalDist[3], totalDist[4], totalDist[5], totalDist[6], totalDist[7]);
-       
-        int myName = -1;
-        for(int i = 0; i < totalDist.Length; i++)
+        float[] totalDist = new float[9];
+        GameObject final = null;
+        float use = 100;
+        int x = -1, y = -1, k = 0;
+        do
         {
-            if(value.Equals(totalDist[i]))
-                myName = i;
-        }        
-        if (myName.Equals(0))
-            return gameManager.allGrid[myPosition[0] + 1, myPosition[1]];
-        else if (myName.Equals(1))
-            return gameManager.allGrid[myPosition[0] - 1, myPosition[1]];
-        else if (myName.Equals(2))
-            return gameManager.allGrid[myPosition[0], myPosition[1] + 1];
-        else if (myName.Equals(3))
-            return gameManager.allGrid[myPosition[0], myPosition[1] - 1];
-        else if (myName.Equals(4))
-            return gameManager.allGrid[myPosition[0] + 1, myPosition[1] + 1];
-        else if (myName.Equals(5))
-            return gameManager.allGrid[myPosition[0] - 1, myPosition[1] - 1];
-        else if (myName.Equals(6))
-            return gameManager.allGrid[myPosition[0] - 1, myPosition[1] + 1];
-        else if (myName.Equals(7))
-            return gameManager.allGrid[myPosition[0] + 1, myPosition[1] - 1];
+            do
+            {
+                if (k < 9)
+                {
+                    if (x + y != 0 && Mathf.Abs(x + y) < 2)
+                    {
+                        totalDist[k] += Mathf.Abs(target[0] + target[1] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0] -
+                                        grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1] +
+                                        grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value);
 
-        return this.gameObject;
+                    }
+                    else
+                    {
+                        totalDist[k] += Mathf.Abs(target[0] + target[1] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0] -
+                                        grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1] +
+                                        grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value) + 4;
+                    }
+                    if (use > totalDist[k])
+                    {
+                        use = totalDist[k];
+                        final = grid[myPosition[0] + x, myPosition[1] + y];
+                    }
+                }
+                y++;
+                k++;
+            }
+            while (y < 2);
+            y = -1;
+            x++;
+        }
+        while(x <= 2);
+
+        return final;
 
     }
     void ds()
     {
-        print(target[0] + "  " + target[1]);
+        print("alvo " + target[0] + "/" + target[1]);
         print("proximo move "+ VerifyNext().name);
         //while(myPosition[0] != target[0] || myPosition[1] != target[1])
         {

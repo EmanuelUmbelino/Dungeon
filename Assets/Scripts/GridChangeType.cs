@@ -14,6 +14,7 @@ public class GridChangeType : MonoBehaviour
     {
         string[] test = this.name.Split('/'); pos = new int[2];
         pos[0] = int.Parse(test[0]); pos[1] = int.Parse(test[1]);
+        value = 10;
     }
     void OnMouseDown()
     {
@@ -32,7 +33,7 @@ public class GridChangeType : MonoBehaviour
         else if (i.Equals(2))
         {
             this.gameObject.tag = "Wall";
-            value = 500;
+            value = 1000;
         }
         sprite.sprite = sprites[i];
     }
