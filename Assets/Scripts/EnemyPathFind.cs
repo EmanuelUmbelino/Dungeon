@@ -78,7 +78,7 @@ public class EnemyPathFind : MonoBehaviour {
                             print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name +
                                 ". seu valor é: " + (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value+4) + ". seu total é: " + totalDist[k]);
                         }
-                        if (totalDist[k] < use)
+                        if (totalDist[k] < use && used[myPosition[0] + x, myPosition[1] + y] != 1)
                         {
                             use = totalDist[k];
                             final = grid[myPosition[0] + x, myPosition[1] + y];
@@ -96,7 +96,6 @@ public class EnemyPathFind : MonoBehaviour {
             while (x < 2);
         }
         if(final == null)final = grid[myPosition[0], myPosition[1]];
-        used[final.GetComponent<GridChangeType>().pos[0], final.GetComponent<GridChangeType>().pos[1]] = 1;
         return final;
 
     }
@@ -105,6 +104,10 @@ public class EnemyPathFind : MonoBehaviour {
         this.transform.position = VerifyNext().transform.position;
         print(VerifyNext().name);
 
+    }
+    void LateUpdate()
+    {
+        used[myPosition[0], myPosition[1]] = 1;
     }
 
 }
