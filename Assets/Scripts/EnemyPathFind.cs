@@ -6,7 +6,10 @@ public class EnemyPathFind : MonoBehaviour {
     private int[] myPosition;
     private GameManager gameManager;
     private GameObject[,] grid;
-    private int[,] used;
+    private bool[,] myRouteVerify;
+    private int[,] myRoute;
+    private int[,] tested;
+    private int cost, previous;
     [SerializeField]
     private int[] target;
 
@@ -14,7 +17,10 @@ public class EnemyPathFind : MonoBehaviour {
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
         grid = gameManager.allGrid;
-        used = new int[PlayerPrefs.GetInt("lines"), PlayerPrefs.GetInt("columns")];
+        myRouteVerify = new bool[PlayerPrefs.GetInt("lines"), PlayerPrefs.GetInt("columns")];
+        myRoute = new int[PlayerPrefs.GetInt("lines"), PlayerPrefs.GetInt("columns")];
+        tested = new int[PlayerPrefs.GetInt("lines"), PlayerPrefs.GetInt("columns")];
+        cost = 0;
         myPosition = new int[2];
         InvokeRepeating("ds", 1,1);
     }
@@ -49,9 +55,9 @@ public class EnemyPathFind : MonoBehaviour {
         // print to test
         //print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + ". seu valor é: " + grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + ". seu total é: " + totalDist[k]);
 
-        float[] totalDist = new float[9];
+        int[] totalDist = new int[9];
         GameObject final = null;
-        float use = 100;
+        previous = 100;
         int x = -1, y = -1, k = 0;
         if (myPosition[0] != target[0]-1 || myPosition[1] != target[1]-1)
         {
@@ -66,8 +72,6 @@ public class EnemyPathFind : MonoBehaviour {
                             totalDist[k] += Mathf.Abs(target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + Mathf.Abs(target[1] -
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1]) +
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value;
-                            print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + 
-                                ". seu valor é: " + grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + ". seu total é: " + totalDist[k]);
 
                         }
                         else
@@ -75,13 +79,12 @@ public class EnemyPathFind : MonoBehaviour {
                             totalDist[k] += Mathf.Abs(target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + Mathf.Abs(target[1] -
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1]) +
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + 4;
-                            print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name +
-                                ". seu valor é: " + (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value+4) + ". seu total é: " + totalDist[k]);
                         }
-                        if (totalDist[k] < use && used[myPosition[0] + x, myPosition[1] + y] != 1)
+                        if (totalDist[k] < previous && myRouteVerify[myPosition[0] + x, myPosition[1] + y] != true)
                         {
-                            use = totalDist[k];
+                            previous = totalDist[k];
                             final = grid[myPosition[0] + x, myPosition[1] + y];
+                            tested[myPosition[0], myPosition[1]] = totalDist[k];
                         }
                     }
                     y++;
@@ -95,19 +98,26 @@ public class EnemyPathFind : MonoBehaviour {
             }
             while (x < 2);
         }
-        if(final == null)final = grid[myPosition[0], myPosition[1]];
+        if (final == null)
+        {
+            previous = 0;
+            final = grid[myPosition[0], myPosition[1]];
+            myRouteVerify = new bool[PlayerPrefs.GetInt("lines"), PlayerPrefs.GetInt("columns")];
+            print("why");
+        }
+        myRoute[myPosition[0], myPosition[1]] = tested[myPosition[0], myPosition[1]];
+        cost += previous;
         return final;
 
     }
     void ds()
     {
         this.transform.position = VerifyNext().transform.position;
-        print(VerifyNext().name);
 
     }
     void LateUpdate()
     {
-        used[myPosition[0], myPosition[1]] = 1;
+        myRouteVerify[myPosition[0], myPosition[1]] = true;
     }
 
 }
