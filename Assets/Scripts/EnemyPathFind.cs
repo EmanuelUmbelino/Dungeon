@@ -47,7 +47,7 @@ public class EnemyPathFind : MonoBehaviour {
           [-1,0]       [1,0]
           [-1,-1][0,-1][1,-1]*/
         // print to test
-        // print("olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + ". seu valor é: " + (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value) + ". seu total é: " + totalDist[k]);
+        //print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + ". seu valor é: " + grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + ". seu total é: " + totalDist[k]);
 
         float[] totalDist = new float[9];
         GameObject final = null;
@@ -63,20 +63,20 @@ public class EnemyPathFind : MonoBehaviour {
                     {
                         if (x + y != 0 && Mathf.Abs(x + y) < 2)
                         {
-                            totalDist[k] += Mathf.Abs((target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + (target[1] -
-                                            grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1])) +
+                            totalDist[k] += Mathf.Abs(target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + Mathf.Abs(target[1] -
+                                            grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1]) +
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value;
-                            print("minha posição é:" + myPosition[0]+"/"+myPosition[1] + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + ". seu valor é: " +
-                                grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + ". seu total é: " + totalDist[k]);
+                            print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + 
+                                ". seu valor é: " + grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + ". seu total é: " + totalDist[k]);
 
                         }
                         else
                         {
-                            totalDist[k] += Mathf.Abs((target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + (target[1] -
-                                            grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1])) +
+                            totalDist[k] += Mathf.Abs(target[0] - grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[0]) + Mathf.Abs(target[1] -
+                                            grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().pos[1]) +
                                             grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + 4;
-                            print("minha posição é:" + myPosition[0] + "/" + myPosition[1] + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name + ". seu valor é: " +
-                                (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value + 4) + ". seu total é: " + totalDist[k]);
+                            print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name +
+                                ". seu valor é: " + (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value+4) + ". seu total é: " + totalDist[k]);
                         }
                         if (totalDist[k] < use && grid[myPosition[0] + x, myPosition[1] + y].name != this.gameObject.name &&
                             used[myPosition[0] + x, myPosition[1] + y] != 1)
