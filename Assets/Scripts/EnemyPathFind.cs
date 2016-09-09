@@ -78,8 +78,7 @@ public class EnemyPathFind : MonoBehaviour {
                             print("minha posição é:" + (myPosition[0] + 1) + "/" + (myPosition[1] + 1) + ". olhando pro: " + grid[myPosition[0] + x, myPosition[1] + y].name +
                                 ". seu valor é: " + (grid[myPosition[0] + x, myPosition[1] + y].GetComponent<GridChangeType>().value+4) + ". seu total é: " + totalDist[k]);
                         }
-                        if (totalDist[k] < use && grid[myPosition[0] + x, myPosition[1] + y].name != this.gameObject.name &&
-                            used[myPosition[0] + x, myPosition[1] + y] != 1)
+                        if (totalDist[k] < use)
                         {
                             use = totalDist[k];
                             final = grid[myPosition[0] + x, myPosition[1] + y];
