@@ -7,15 +7,22 @@ public class GridChangeType : MonoBehaviour
     private SpriteRenderer sprite;
     [SerializeField]
     private Sprite[] sprites;
-    public int value;
-    public int[] pos;
+    private int[] pos;
     int i = 0;
     void Start()
     {
         string[] test = this.name.Split('/'); pos = new int[2];
         pos[0] = int.Parse(test[0]); pos[1] = int.Parse(test[1]);
-        value = 10;
     }
+    public int getX()
+    {
+        return pos[0];
+    }
+    public int getY()
+    {
+        return pos[1];
+    }
+
     void OnMouseDown()
     {
         i++;
@@ -23,17 +30,14 @@ public class GridChangeType : MonoBehaviour
         {
             i = 0;
             this.gameObject.tag = "Grid";
-            value = 10;
         }
         else if (i.Equals(1))
         {
             this.gameObject.tag = "Water";
-            value = 20;
         }
         else if (i.Equals(2))
         {
             this.gameObject.tag = "Wall";
-            value = 1000;
         }
         sprite.sprite = sprites[i];
     }

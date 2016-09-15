@@ -18,13 +18,13 @@ public class GameManager : MonoBehaviour {
 
 	void Spawnfield()
 	{
-		for (int i = 1; i < lines+1; i++) 
+		for (int i = 0; i < lines; i++) 
 		{
-			for(int j = 1; j < columns+1; j++)
+			for(int j = columns-1; j >= 0; j--)
 			{
-                GameObject x = (GameObject)Instantiate(Grid, new Vector3(i - (lines + 1) / 2, j - (columns + 1) / 2, 0), transform.rotation);
-                x.name = i + "/" + (columns - j + 1);
-                allGrid[i-1, columns - j] = x;
+                GameObject x = (GameObject)Instantiate(Grid, new Vector3(i - lines / 2, j - columns / 2, 0), transform.rotation);
+                x.name = i + "/" + (columns-1-j);
+                allGrid[i, columns - 1 - j] = x;
 
 			}
 		}
