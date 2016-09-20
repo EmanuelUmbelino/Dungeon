@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
 		{
 			for(int j = columns-1; j >= 0; j--)
 			{
-                GameObject x = (GameObject)Instantiate(Grid, new Vector3(i - lines / 2, j - columns / 2, 0), transform.rotation);
+                GameObject x = (GameObject)Instantiate(Grid, new Vector3(i - lines / 2, j - columns / 2, j), transform.rotation);
                 x.name = i + "/" + (columns-1-j);
                 allGrid[i, columns - 1 - j] = x;
 

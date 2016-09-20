@@ -19,7 +19,7 @@ class Program : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
         inRoute = 0;
-        InvokeRepeating("WalkInRoute", 1, 1);
+        //InvokeRepeating("WalkInRoute", 1, 0.1f);
         Think();
     }
     void OnTriggerStay2D(Collider2D other)
@@ -39,14 +39,16 @@ class Program : MonoBehaviour
         Think();
     }
 
-    void WalkInRoute()
+    void Update()
     {
-        if(path.Capacity > 0)
-            if (myPosition.X != target[0] || myPosition.Y != target[1])
-            {
-                this.transform.position = gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position;
+        if (path.Capacity > 0)
+        {
+            this.transform.position = Vector3.Lerp(this.transform.position, gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position, 0.05f);
+            print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
+            if (new Vector3(Mathf.Round(this.transform.position.x-0.3f), Mathf.Round(this.transform.position.y - 0.3f), Mathf.Round(this.transform.position.z)).Equals
+                (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position) && inRoute < path.Capacity-1)
                 inRoute++;
-            }
+        }
 
     }
     
@@ -55,9 +57,10 @@ class Program : MonoBehaviour
         InitializeMap();
         PathFinder pathFinder = new PathFinder(searchParameters);
         path = pathFinder.FindPath();
-        foreach(Point p in path)
+        inRoute++;
+        foreach (Point p in path)
         {
-            print(p.X + "  /  " + p.Y);
+            //print(p.X + "  /  " + p.Y);
         }
     }    
 
