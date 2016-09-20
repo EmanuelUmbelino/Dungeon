@@ -9,7 +9,6 @@ class Program : MonoBehaviour
     private bool[,] water;
     private int inRoute;
     private List<Point> path;
-    [SerializeField]
     private int[] target;
     private Point myPosition;
     private GameManager gameManager;

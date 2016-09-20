@@ -11,8 +11,9 @@ public class GameManager : MonoBehaviour {
     private Vector3 nCamera;
     public GameObject[,] allGrid;
     public static bool target;
+    public static bool enemy;
 
-	void Start () 
+    void Start () 
 	{
 		lines = PlayerPrefs.GetInt ("lines");
         columns = PlayerPrefs.GetInt("columns");
@@ -40,9 +41,25 @@ public class GameManager : MonoBehaviour {
                 nCamera)
             mCamera.position = Vector3.Lerp(mCamera.position, nCamera, 0.05f);
     }
+
+
+    public void Atack()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject i in enemies)
+        {
+            i.GetComponent<Program>().enabled = true;
+        }
+    }
     public void ToTarget()
     {
-        target = !target;
+        target = true;
+        enemy = false;
+    }
+    public void ToEnemy()
+    {
+        enemy = true;
+        target = false;
     }
     public void MoveX(int distance)
     {

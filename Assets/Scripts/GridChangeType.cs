@@ -7,6 +7,8 @@ public class GridChangeType : MonoBehaviour
     private SpriteRenderer sprite;
     [SerializeField]
     private Sprite[] sprites;
+    [SerializeField]
+    private GameObject enemy;
     private int[] pos;
     int i = 0;
     void Start()
@@ -25,7 +27,7 @@ public class GridChangeType : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(!GameManager.target)
+        if(!GameManager.target && !GameManager.enemy)
         {
             i++;
             sprite.color = Color.white;
@@ -44,12 +46,18 @@ public class GridChangeType : MonoBehaviour
             }
             sprite.sprite = sprites[i];
         }
+        else if (!GameManager.target)
+        {
+            Instantiate(enemy, this.transform.position, this.transform.rotation);
+            GameManager.enemy = false;
+        }
         else
         {
             i = 2;
             this.gameObject.tag = "Target";
             sprite.sprite = sprites[0];
             sprite.color = Color.red;
+            GameManager.target = false;
         }
     }
 
