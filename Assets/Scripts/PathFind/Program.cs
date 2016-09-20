@@ -44,7 +44,7 @@ class Program : MonoBehaviour
         if (path.Capacity > 0)
         {
             this.transform.position = Vector3.Lerp(this.transform.position, gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position, 0.05f);
-            print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
+            //print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
             if (new Vector3(Mathf.Round(this.transform.position.x-0.3f), Mathf.Round(this.transform.position.y - 0.3f), Mathf.Round(this.transform.position.z)).Equals
                 (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position) && inRoute < path.Capacity-1)
                 inRoute++;
@@ -58,10 +58,6 @@ class Program : MonoBehaviour
         PathFinder pathFinder = new PathFinder(searchParameters);
         path = pathFinder.FindPath();
         inRoute++;
-        foreach (Point p in path)
-        {
-            //print(p.X + "  /  " + p.Y);
-        }
     }    
 
     private void InitializeMap()
@@ -70,6 +66,8 @@ class Program : MonoBehaviour
         int columns = PlayerPrefs.GetInt("columns");
         this.map = new bool[lines, columns];
         this.water = new bool[lines, columns];
+        Point startLocation = myPosition;
+        Point endLocation = myPosition;
 
         for (int y = 0; y < columns; y++)
             for (int x = 0; x < lines; x++)
@@ -84,6 +82,12 @@ class Program : MonoBehaviour
                     map[x, y] = true;
                     water[x, y] = true;
                 }
+                else if (gameManager.allGrid[x, y].tag.Equals("Target"))
+                {
+                    map[x, y] = true;
+                    water[x, y] = false;
+                    endLocation = new Point(x, y);
+                }
                 else
                 {
                     map[x, y] = true;
@@ -91,8 +95,6 @@ class Program : MonoBehaviour
                 }
             }
 
-        var startLocation = myPosition;
-        var endLocation = new Point(target[0],target[1]);
         this.searchParameters = new SearchParameters(startLocation, endLocation, map, water);
     }
     

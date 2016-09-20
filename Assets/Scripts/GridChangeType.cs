@@ -25,21 +25,32 @@ public class GridChangeType : MonoBehaviour
 
     void OnMouseDown()
     {
-        i++;
-        if (i > 2)
+        if(!GameManager.target)
         {
-            i = 0;
-            this.gameObject.tag = "Grid";
+            i++;
+            sprite.color = Color.white;
+            if (i > 2)
+            {
+                i = 0;
+                this.gameObject.tag = "Grid";
+            }
+            else if (i.Equals(1))
+            {
+                this.gameObject.tag = "Water";
+            }
+            else if (i.Equals(2))
+            {
+                this.gameObject.tag = "Wall";
+            }
+            sprite.sprite = sprites[i];
         }
-        else if (i.Equals(1))
+        else
         {
-            this.gameObject.tag = "Water";
+            i = 2;
+            this.gameObject.tag = "Target";
+            sprite.sprite = sprites[0];
+            sprite.color = Color.red;
         }
-        else if (i.Equals(2))
-        {
-            this.gameObject.tag = "Wall";
-        }
-        sprite.sprite = sprites[i];
     }
 
 }

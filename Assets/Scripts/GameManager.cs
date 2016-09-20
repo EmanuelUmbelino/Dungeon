@@ -6,7 +6,11 @@ public class GameManager : MonoBehaviour {
     public int lines, columns;
     [SerializeField]
     private GameObject Grid;
+    [SerializeField]
+    private Transform mCamera;
+    private Vector3 nCamera;
     public GameObject[,] allGrid;
+    public static bool target;
 
 	void Start () 
 	{
@@ -14,6 +18,7 @@ public class GameManager : MonoBehaviour {
         columns = PlayerPrefs.GetInt("columns");
         allGrid = new GameObject[lines, columns];
 		Spawnfield ();
+        nCamera = mCamera.position;
 	}
 
 	void Spawnfield()
@@ -29,9 +34,22 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
-
-	void Update () 
-	{
-		//print (lines + "||" + columns);
-	}
+    void Update()
+    {
+        if (new Vector3(Mathf.Round(mCamera.position.x - 0.3f), Mathf.Round(mCamera.position.y - 0.3f), Mathf.Round(mCamera.position.z)) !=
+                nCamera)
+            mCamera.position = Vector3.Lerp(mCamera.position, nCamera, 0.05f);
+    }
+    public void ToTarget()
+    {
+        target = !target;
+    }
+    public void MoveX(int distance)
+    {
+        nCamera = mCamera.position + new Vector3(distance, 0);
+    }
+    public void MoveY(int distance)
+    {
+        nCamera = mCamera.position + new Vector3(0, distance);
+    }
 }
