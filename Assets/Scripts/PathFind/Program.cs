@@ -5,8 +5,11 @@ using System.Linq;
 
 class Program : MonoBehaviour
 {
+    [SerializeField]
+    private Animator animator;
     private bool[,] map;
     private bool[,] water;
+    private bool live;
     private int inRoute;
     private List<Point> path;
     private int[] target;
@@ -17,9 +20,7 @@ class Program : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
-        inRoute = 0;
-        //InvokeRepeating("WalkInRoute", 1, 0.1f);
-        Think();
+        this.tag = "Enemy";
     }
     void OnTriggerStay2D(Collider2D other)
     {
@@ -37,16 +38,33 @@ class Program : MonoBehaviour
         target[0] = newTarget.X; target[1] = newTarget.Y;
         Think();
     }
+    public void Live()
+    {
+        inRoute = 0;
+        Think();
+        live = true;
+    }
 
     void Update()
     {
-        if (path.Capacity > 0)
+        if (live && path.Capacity > 0)
         {
             this.transform.position = Vector3.Lerp(this.transform.position, gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position, 0.03f);
             //print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
-            if (new Vector3(Mathf.Round(this.transform.position.x-0.01f), Mathf.Round(this.transform.position.y - 0.01f), Mathf.Round(this.transform.position.z)).Equals
-                (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position) && inRoute < path.Capacity-1)
-                inRoute++;
+            if (new Vector3(Mathf.Round(this.transform.position.x - 0.01f), Mathf.Round(this.transform.position.y - 0.01f), Mathf.Round(this.transform.position.z)).Equals
+                (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position))
+            {
+                path.RemoveAt(0);
+                animator.SetInteger("local", 0);
+                if (myPosition.X < path[inRoute].X)
+                    animator.SetInteger("local", 4);
+                else
+                    animator.SetInteger("local", 2);
+                if (myPosition.Y < path[inRoute].Y)
+                    animator.SetInteger("local", 3);
+                else
+                    animator.SetInteger("local", 1);
+            }
         }
 
     }

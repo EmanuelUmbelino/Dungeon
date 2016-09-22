@@ -45,10 +45,11 @@ public class GameManager : MonoBehaviour {
 
     public void Atack()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemies;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach(GameObject i in enemies)
         {
-            i.GetComponent<Program>().enabled = true;
+            i.GetComponent<Program>().Live();
         }
     }
     public void ToTarget()
