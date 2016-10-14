@@ -21,6 +21,7 @@ class Program : MonoBehaviour
     {
         gameManager = GameObject.FindGameObjectWithTag("Finish").GetComponent<GameManager>() as GameManager;
         this.tag = "Enemy";
+        InvokeRepeating("Go", 2, 0.5f);
     }
     void OnTriggerStay2D(Collider2D other)
     {
@@ -45,11 +46,15 @@ class Program : MonoBehaviour
         live = true;
     }
 
+    void Go()
+    {
+        this.transform.position = gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position;
+    }
+
     void Update()
     {
         if (live && path.Capacity > 0)
         {
-            this.transform.position = Vector3.Lerp(this.transform.position, gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position, 0.03f);
             //print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
             if (new Vector3(Mathf.Round(this.transform.position.x - 0.01f), Mathf.Round(this.transform.position.y - 0.01f), Mathf.Round(this.transform.position.z)).Equals
                 (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position))

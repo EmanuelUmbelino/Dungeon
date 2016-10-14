@@ -27,7 +27,8 @@ public class CameraMove : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        active = true;
+        if (Input.GetKey(KeyCode.LeftControl))
+            active = true;
     }
     public void OnPointerExit(PointerEventData eventData)
     {
