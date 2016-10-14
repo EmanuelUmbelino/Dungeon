@@ -9,6 +9,7 @@ class Program : MonoBehaviour
     private Animator animator;
     private bool[,] map;
     private bool[,] water;
+    private SpriteRenderer[,] sprites;
     private bool live;
     private int inRoute;
     private List<Point> path;
@@ -48,19 +49,15 @@ class Program : MonoBehaviour
 
     void Go()
     {
-        this.transform.position = gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position;
-    }
-
-    void Update()
-    {
-        if (live && path.Capacity > 0)
+        if (live && path.Any())
         {
+            this.transform.position = gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position;
             //print(path.Capacity + " / " + inRoute + " / " + path[inRoute].X);
             if (new Vector3(Mathf.Round(this.transform.position.x - 0.01f), Mathf.Round(this.transform.position.y - 0.01f), Mathf.Round(this.transform.position.z)).Equals
                 (gameManager.allGrid[path[inRoute].X, path[inRoute].Y].transform.position))
             {
                 path.RemoveAt(0);
-                animator.SetInteger("local", 0);
+                /*animator.SetInteger("local", 0);
                 if (myPosition.X < path[inRoute].X)
                     animator.SetInteger("local", 4);
                 else
@@ -68,18 +65,16 @@ class Program : MonoBehaviour
                 if (myPosition.Y < path[inRoute].Y)
                     animator.SetInteger("local", 3);
                 else
-                    animator.SetInteger("local", 1);
+                    animator.SetInteger("local", 1);*/
             }
         }
-
     }
-    
+
     void Think()
     {
         InitializeMap();
         PathFinder pathFinder = new PathFinder(searchParameters);
         path = pathFinder.FindPath();
-        inRoute++;
     }    
 
     private void InitializeMap()
@@ -88,12 +83,14 @@ class Program : MonoBehaviour
         int columns = PlayerPrefs.GetInt("columns");
         this.map = new bool[lines, columns];
         this.water = new bool[lines, columns];
+        this.sprites = new SpriteRenderer[lines, columns];
         Point startLocation = myPosition;
         Point endLocation = myPosition;
 
         for (int y = 0; y < columns; y++)
             for (int x = 0; x < lines; x++)
             {
+                sprites[x, y] = gameManager.allGrid[x, y].GetComponent<SpriteRenderer>();
                 if(gameManager.allGrid[x,y].tag.Equals("Wall"))
                 {
                     map[x, y] = false;
@@ -117,7 +114,7 @@ class Program : MonoBehaviour
                 }
             }
 
-        this.searchParameters = new SearchParameters(startLocation, endLocation, map, water);
+        this.searchParameters = new SearchParameters(startLocation, endLocation, map, water, sprites);
     }
     
 }

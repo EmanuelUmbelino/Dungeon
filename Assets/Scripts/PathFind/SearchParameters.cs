@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 
 /// <summary>
@@ -14,11 +15,14 @@ public class SearchParameters
 
     public bool[,] Water { get; set; }
 
-    public SearchParameters(Point startLocation, Point endLocation, bool[,] map, bool[,] water)
+    public SpriteRenderer[,] Sprites { get; set; }
+
+    public SearchParameters(Point startLocation, Point endLocation, bool[,] map, bool[,] water, SpriteRenderer[,] sprites)
     {
         this.StartLocation = startLocation;
         this.EndLocation = endLocation;
         this.Map = map;
         this.Water = water;
+        this.Sprites = sprites;
     }
 }

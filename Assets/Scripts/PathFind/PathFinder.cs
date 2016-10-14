@@ -1,7 +1,8 @@
 ﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
-public class PathFinder
+public class PathFinder : MonoBehaviour
 {
     private int width;
     private int height;
@@ -13,7 +14,7 @@ public class PathFinder
     public PathFinder(SearchParameters searchParameters)
     {
         this.searchParameters = searchParameters;
-        InitializeNodes(searchParameters.Map, searchParameters.Water);
+        InitializeNodes(searchParameters.Map, searchParameters.Water, searchParameters.Sprites);
         this.startNode = this.nodes[searchParameters.StartLocation.X, searchParameters.StartLocation.Y];
         this.startNode.State = NodeState.Open;
         this.endNode = this.nodes[searchParameters.EndLocation.X, searchParameters.EndLocation.Y];
@@ -38,7 +39,7 @@ public class PathFinder
         return path;
     }
 
-    private void InitializeNodes(bool[,] map, bool[,] water)
+    private void InitializeNodes(bool[,] map, bool[,] water, SpriteRenderer[,] sprite)
     {
         this.width = map.GetLength(0);
         this.height = map.GetLength(1);
@@ -47,7 +48,7 @@ public class PathFinder
         {
             for (int x = 0; x < this.width; x++)
             {
-                this.nodes[x, y] = new Node(x, y, map[x, y], this.searchParameters.EndLocation, water[x,y]);
+                this.nodes[x, y] = new Node(x, y, map[x, y], this.searchParameters.EndLocation, water[x,y], sprite[x,y]);
             }
         }
     }
@@ -55,6 +56,7 @@ public class PathFinder
     private bool Search(Node currentNode)
     {
         currentNode.State = NodeState.Closed;
+        currentNode.Sprite.color = new Color(0.6f,1f,0.6f,1);
         List<Node> nextNodes = GetAdjacentWalkableNodes(currentNode);
 
         nextNodes.Sort((node1, node2) => node1.F.CompareTo(node2.F));
@@ -98,11 +100,13 @@ public class PathFinder
             if (node.State == NodeState.Open)
             {
                 float traversalCost = Node.GetTraversalCost(node.Location, node.ParentNode.Location, node.IsWater);
-                float gTemp = fromNode.G + traversalCost;
+                float gTemp = fromNode.G;
+                //print(node.Location.X + "/" + node.Location.Y + "  " + node.G + "  " + gTemp);
                 if (gTemp < node.G)
                 {
                     node.ParentNode = fromNode;
                     walkableNodes.Add(node);
+                    node.Sprite.color = new Color(1f, 0.6f, 0.6f, 1);
                 }
             }
             else
@@ -110,6 +114,7 @@ public class PathFinder
                 node.ParentNode = fromNode;
                 node.State = NodeState.Open;
                 walkableNodes.Add(node);
+                node.Sprite.color = new Color(0.6f,0.6f,1f,1);
             }
         }
 

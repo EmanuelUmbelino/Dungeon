@@ -12,6 +12,8 @@ public class Node
 
     public bool IsWalkable { get; set; }
 
+    public SpriteRenderer Sprite { get; set; }
+
     public bool IsWater { get; set; }
 
     public float G { get; private set; }
@@ -35,7 +37,7 @@ public class Node
         }
     }
 
-    public Node(int x, int y, bool isWalkable, Point endLocation, bool isWater)
+    public Node(int x, int y, bool isWalkable, Point endLocation, bool isWater, SpriteRenderer sprite)
     {
         this.Location = new Point(x, y);
         this.State = NodeState.Untested;
@@ -43,6 +45,7 @@ public class Node
         this.IsWater = IsWater;
         this.H = GetTraversalCost(this.Location, endLocation, isWater);
         this.G = 0;
+        this.Sprite = sprite;
     }
 
     public override string ToString()
