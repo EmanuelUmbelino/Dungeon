@@ -37,9 +37,9 @@ public class GameManager : MonoBehaviour {
 	}
     void Update()
     {
-        if (new Vector3(Mathf.Round(mCamera.position.x - 0.3f), Mathf.Round(mCamera.position.y - 0.3f), Mathf.Round(mCamera.position.z)) !=
+        /*if (new Vector3(Mathf.Round(mCamera.position.x - 0.3f), Mathf.Round(mCamera.position.y - 0.3f), Mathf.Round(mCamera.position.z)) !=
                 nCamera)
-            mCamera.position = Vector3.Lerp(mCamera.position, nCamera, 0.05f);
+            mCamera.position = Vector3.Lerp(mCamera.position, nCamera, 0.05f);*/
     }
 
 
